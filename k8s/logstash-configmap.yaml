@@ -1,0 +1,26 @@
+# logstash-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: logstash-pipeline-config
+  namespace: elk
+data:
+  logstash.conf: |
+    input {
+      tcp {
+        port => 5044
+        codec => json_lines
+      }
+    }
+
+    filter {
+      json { source => "message" }
+    }
+
+    output {
+      elasticsearch {
+        hosts => ["http://elasticsearch:9200"]
+        index => "api-logs-%{+YYYY.MM.dd}"
+      }
+      stdout { codec => rubydebug }
+    }
