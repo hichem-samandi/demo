@@ -21,12 +21,14 @@ pipeline {
         ])
       }
     }
-       stage('Check Java') {
-            steps {
-                sh 'java -version'
-                sh 'javac -version'
-                sh 'mvn -v'
+        stage('Check Java') {
+                steps {
+                    sh 'java -version'
+                    sh 'javac -version'
+                    sh 'mvn -v'
+                }
             }
+
     stage('Build & Test') {
       steps {
         sh 'mvn -B clean package -DskipTests=false'
