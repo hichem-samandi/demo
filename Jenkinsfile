@@ -21,8 +21,8 @@ pipeline {
         ])
       }
     }
-        stage('Check Java') {
-                steps {
+    stage('Check Java') {
+      steps {
                     sh 'java -version'
                     sh 'javac -version'
                     sh 'mvn -v'
