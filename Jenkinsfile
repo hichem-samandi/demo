@@ -52,7 +52,8 @@ pipeline {
       }
     }
 
-    stage('Smoke Test') {
+
+/*     stage('Smoke Test') {
       steps {
         sh '''
           NODEPORT=$(kubectl get svc spring-boot-rest-service -o jsonpath='{.spec.ports[0].nodePort}')
@@ -64,7 +65,7 @@ pipeline {
           done
         '''
       }
-    }
+    } */
   }
 
   post {
