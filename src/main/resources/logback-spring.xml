@@ -1,27 +1,46 @@
-<configuration>
-    <!-- Console logs classiques -->
-    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+<!--<configuration>
+    &lt;!&ndash; Console logs classiques &ndash;&gt;
+ &lt;!&ndash;   <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level [%thread] %logger{36} - %msg%n</pattern>
         </encoder>
-    </appender>
+    </appender>&ndash;&gt;
 
-    <!-- Envoi vers Logstash (dans Kubernetes, service "logstash" sur le port 5044) -->
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+    &lt;!&ndash; Envoi vers Logstash (dans Kubernetes, service "logstash" sur le port 5044) &ndash;&gt;
     <appender name="LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
-        <!-- Service DNS interne Kubernetes -->
+        &lt;!&ndash; Service DNS interne Kubernetes &ndash;&gt;
         <destination>logstash.elk.svc.cluster.local:5044</destination>
 
-        <!-- Encoder JSON -->
-        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder"/>
+        &lt;!&ndash; Encoder JSON &ndash;&gt;
+        <encoder class="net.logstash.logback.encoder.LoggingEventEncoder" />
 
-        <!-- Reconnexion automatique -->
+        &lt;!&ndash; Reconnexion automatique &ndash;&gt;
         <keepAliveDuration>5 minutes</keepAliveDuration>
         <reconnectionDelay>10 seconds</reconnectionDelay>
     </appender>
 
-    <!-- Configuration racine -->
+    &lt;!&ndash; Configuration racine &ndash;&gt;
     <root level="INFO">
-        <appender-ref ref="CONSOLE"/>
+&lt;!&ndash;        <appender-ref ref="CONSOLE"/>&ndash;&gt;
         <appender-ref ref="LOGSTASH"/>
     </root>
+</configuration>-->
+<configuration>
+
+<appender name="LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+    <destination>logstash:5000</destination>
+
+    <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+        <customFields>{"application":"demo","service_type":"rest-api"}</customFields>
+    </encoder>
+</appender>
+
+<logger name="org.springframework.web" level="INFO"/>
+<logger name="org.hibernate" level="WARN"/>
+
+<root level="INFO">
+    <appender-ref ref="LOGSTASH"/>
+</root>
 </configuration>

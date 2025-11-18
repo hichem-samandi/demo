@@ -9,12 +9,14 @@ data:
     input {
       tcp {
         port => 5044
-        codec => json_lines
+        codec => json
       }
     }
 
     filter {
-      json { source => "message" }
+       mutate {
+          add_field => { "application" => "demo" }
+      }
     }
 
     output {
